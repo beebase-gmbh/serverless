@@ -1,10 +1,12 @@
-<h1>What's your message?</h1>
-<div mat-dialog-content>
-  <mat-form-field class="full-width-control">
-    <input matInput tabindex="1" [(ngModel)]="message" name="message">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions class="pull-right">
-  <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="message" tabindex="2">Ok</button>
-</div>
+<form (ngSubmit)="onOkClick(message)">
+  <h1>What's your message?</h1>
+  <div mat-dialog-content>
+    <mat-form-field class="full-width-control">
+      <input matInput tabindex="1" [(ngModel)]="message" name="message">
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions class="pull-right">
+    <button type="button" mat-button (click)="onCancelClick()" tabindex="-1">Cancel</button>
+    <button [disabled]="!message" type="submit" mat-raised-button color="primary" tabindex="2">Ok</button>
+  </div>
+</form>

@@ -14,7 +14,11 @@ export class TextWriterDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  onNoClick(): void {
+  onOkClick(message: string): void {
+    this.dialogRef.close(message);
+  }
+
+  onCancelClick(): void {
     this.dialogRef.close();
   }
 
