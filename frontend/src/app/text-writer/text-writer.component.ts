@@ -1,27 +1,44 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { TextWriterDialogComponent } from './text-writer-dialog/text-writer-dialog.component';
+import { TextWriterService } from './text-writer.service';
+import { IMessage } from './message.interface';
+import { Observable } from 'rxjs/Observable';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-text-writer',
   templateUrl: './text-writer.component.html',
   styleUrls: ['./text-writer.component.scss']
 })
-export class TextWriterComponent implements OnInit {
+export class TextWriterComponent implements OnInit, OnDestroy {
   @ViewChild('textWriter') textWriter: ElementRef;
   private position: {x: number, y: number};
+  private msgPollIntervalId: any;
+  private subscription: Subscription = new Subscription();
+  private elements: HTMLDivElement[] = [];
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog,
+              private twService: TextWriterService) { }
 
   ngOnInit() {
+    this.msgPollIntervalId = setInterval(() => {
+      this.clearPage();
+      this.subscription.add(this.twService.getMessages().subscribe((messages: IMessage[]) => {
+        messages.forEach((msg: IMessage) => {
+          this.appendMessageToPage(msg);
+        });
+      }));
+    }, 5000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.msgPollIntervalId);
+    this.subscription.unsubscribe();
   }
 
   onBackgroundClick(event: MouseEvent): void {
-    this.position = {
-      x: event.clientX,
-      y: event.clientY
-    };
-
     this.dialog.open(TextWriterDialogComponent)
     .afterClosed()
     .subscribe(result => {
@@ -29,17 +46,32 @@ export class TextWriterComponent implements OnInit {
         return;
       }
 
-      this.appendMessageToPage(result);
+      const msg: IMessage = {
+        message: result,
+        posX: 100 / window.innerWidth * event.clientX,
+        posY: 100 / window.innerHeight * event.clientY
+      };
+
+      // TODO: this.twService.postMessage(msg);
+      this.appendMessageToPage(msg);
     });
   }
 
-  private appendMessageToPage(message: string): void {
+  private appendMessageToPage(msg: IMessage): void {
     const msgDiv = document.createElement('div');
-    msgDiv.innerText = message;
+    msgDiv.innerText = msg.message;
     msgDiv.style.position = 'absolute';
-    msgDiv.style.left = this.position.x.toString() + 'px';
-    msgDiv.style.top = this.position.y.toString() + 'px';
-    this.textWriter.nativeElement.appendChild(msgDiv);
+    msgDiv.style.left = msg.posX + '%';
+    msgDiv.style.top = msg.posY + '%';
+    this.elements.push(msgDiv);
+    (<HTMLElement>this.textWriter.nativeElement).appendChild(msgDiv);
+  }
+
+  private clearPage(): void {
+    this.elements.forEach((el: HTMLDivElement) => {
+      (<HTMLElement>this.textWriter.nativeElement).removeChild(el);
+    });
+    this.elements = [];
   }
 
 }
