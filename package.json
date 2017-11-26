@@ -1,0 +1,27 @@
+{
+  "name": "serverless",
+  "version": "0.2.0",
+  "description": "Amazon AWS SAM toolkit example by BeeBase GmbH",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "sam local start-api",
+    "debug": "sam local start-api -d 5858",
+    "pack": "sam package --template-file template.yaml --s3-bucket aws-sam-serverless --output-template-file packaged.yaml",
+    "upload": "sam deploy --template-file ./packaged.yaml --stack-name aws-sam-serverless --capabilities CAPABILITY_IAM",
+    "deploy": "npm run pack && npm run upload"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beebase-gmbh/serverless.git"
+  },
+  "author": "Jann Wild",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beebase-gmbh/serverless/issues"
+  },
+  "homepage": "https://github.com/beebase-gmbh/serverless#readme",
+  "dependencies": {
+    "aws-sdk": "^2.156.0"
+  }
+}

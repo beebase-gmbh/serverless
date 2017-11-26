@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Amazon AWS SAM toolkit example by BeeBase GmbH
+
+Resources:
+  GraffitiApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs6.10
+      MemorySize: 128
+      Timeout: 10
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref GraffitiTable
+      Events:
+        Read:
+          Type: Api
+          Properties:
+            Path: /read
+            Method: get
+        Write:
+          Type: Api
+          Properties:
+            Path: /write
+            Method: post
+
+  GraffitiTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  # Fix api permissions
+  GraffitiPerms:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - GraffitiApi
+      - GraffitiTable
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref GraffitiApi
+      Principal: apigateway.amazonaws.com
