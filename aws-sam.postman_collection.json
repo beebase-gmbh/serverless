@@ -1,0 +1,69 @@
+{
+	"info": {
+		"name": "aws-sam",
+		"_postman_id": "823a2029-d99a-fc23-2743-a0b0d40eb049",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "write",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"So wie die alten sungen - so furzen auch die Jungen!\",\n    \"xPos\": \"10\",\n    \"yPos\": \"20\"\n}"
+				},
+				"url": {
+					"raw": "https://24ecgz4pqj.execute-api.eu-west-1.amazonaws.com/Prod/write/",
+					"protocol": "https",
+					"host": [
+						"24ecgz4pqj",
+						"execute-api",
+						"eu-west-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"Prod",
+						"write",
+						""
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "read",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://24ecgz4pqj.execute-api.eu-west-1.amazonaws.com/Prod/read",
+					"protocol": "https",
+					"host": [
+						"24ecgz4pqj",
+						"execute-api",
+						"eu-west-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"Prod",
+						"read"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
