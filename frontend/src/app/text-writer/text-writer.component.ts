@@ -26,6 +26,9 @@ export class TextWriterComponent implements OnInit, OnDestroy {
     this.msgPollIntervalId = setInterval(() => {
       this.clearPage();
       this.subscription.add(this.twService.getMessages().subscribe((messages: IMessage[]) => {
+        if (!messages) {
+          return;
+        }
         messages.forEach((msg: IMessage) => {
           this.appendMessageToPage(msg);
         });
@@ -48,11 +51,11 @@ export class TextWriterComponent implements OnInit, OnDestroy {
 
       const msg: IMessage = {
         message: result,
-        posX: 100 / window.innerWidth * event.clientX,
-        posY: 100 / window.innerHeight * event.clientY
+        xPos: 100 / window.innerWidth * event.clientX,
+        yPos: 100 / window.innerHeight * event.clientY
       };
 
-      // TODO: this.twService.postMessage(msg);
+      this.subscription.add(this.twService.postMessage(msg).subscribe());
       this.appendMessageToPage(msg);
     });
   }
@@ -61,8 +64,8 @@ export class TextWriterComponent implements OnInit, OnDestroy {
     const msgDiv = document.createElement('div');
     msgDiv.innerText = msg.message;
     msgDiv.style.position = 'absolute';
-    msgDiv.style.left = msg.posX + '%';
-    msgDiv.style.top = msg.posY + '%';
+    msgDiv.style.left = msg.xPos + '%';
+    msgDiv.style.top = msg.yPos + '%';
     this.elements.push(msgDiv);
     (<HTMLElement>this.textWriter.nativeElement).appendChild(msgDiv);
   }

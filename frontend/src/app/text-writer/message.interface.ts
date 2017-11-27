@@ -1,5 +1,6 @@
 export interface IMessage {
+    id?: string;
     message: string;
-    posX: number;
-    posY: number;
+    xPos: number;
+    yPos: number;
 }

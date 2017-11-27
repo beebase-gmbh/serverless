@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IMessage } from './message.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-
-const MOCK_DATA: IMessage[] = [
-  { message: 'It\'s easy', posX: 23, posY: 12 },
-  { message: 'Just click somewhere', posX: 40, posY: 30 },
-  { message: '-->🤘😁<--', posX: 60, posY: 49 },
-  { message: 'Enjoy', posX: 50, posY: 68 }
-];
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class TextWriterService {
@@ -17,10 +11,25 @@ export class TextWriterService {
   constructor(private http: HttpClient) { }
 
   public getMessages(): Observable<IMessage[]> {
-    return Observable.of(MOCK_DATA);
+    return this.http.get('https://bxjqeqgeud.execute-api.eu-west-1.amazonaws.com/Prod', {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
+    })
+    .map((response: any) => {
+      console.log('[GET] Response: ', response);
+      return response;
+    });
   }
 
   public postMessage(msg: IMessage): Observable<any> {
-    return this.http.post('url', msg);
+    const body: any = {
+      message: msg.message,
+      xPos: msg.xPos,
+      yPos: msg.yPos
+    };
+
+    return this.http.post('https://bxjqeqgeud.execute-api.eu-west-1.amazonaws.com/Prod', body)
+    .map((res: any) => {
+      console.log('[POST] Response', res);
+    });
   }
 }
