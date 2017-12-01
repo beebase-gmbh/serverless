@@ -11,7 +11,7 @@ export class TextWriterService {
   constructor(private http: HttpClient) { }
 
   public getMessages(): Observable<IMessage[]> {
-    return this.http.get('https://bxjqeqgeud.execute-api.eu-west-1.amazonaws.com/Prod', {
+    return this.http.get('https://guaxsfhcaj.execute-api.eu-west-1.amazonaws.com/Prod', {
       headers: new HttpHeaders().set('Content-Type', 'application/json')
     })
     .map((response: any) => {
@@ -27,7 +27,7 @@ export class TextWriterService {
       yPos: msg.yPos
     };
 
-    return this.http.post('https://bxjqeqgeud.execute-api.eu-west-1.amazonaws.com/Prod', body)
+    return this.http.post('https://guaxsfhcaj.execute-api.eu-west-1.amazonaws.com/Prod', body)
     .map((res: any) => {
       console.log('[POST] Response', res);
     });

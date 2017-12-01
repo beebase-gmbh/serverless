@@ -24,7 +24,7 @@ export class TextWriterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.msgPollIntervalId = setInterval(() => {
-      this.clearPage();
+      // this.clearPage();
       this.subscription.add(this.twService.getMessages().subscribe((messages: IMessage[]) => {
         if (!messages) {
           return;
@@ -33,7 +33,7 @@ export class TextWriterComponent implements OnInit, OnDestroy {
           this.appendMessageToPage(msg);
         });
       }));
-    }, 5000);
+    }, 3000);
   }
 
   ngOnDestroy(): void {
@@ -56,12 +56,17 @@ export class TextWriterComponent implements OnInit, OnDestroy {
       };
 
       this.subscription.add(this.twService.postMessage(msg).subscribe());
-      this.appendMessageToPage(msg);
+      // this.appendMessageToPage(msg);
     });
   }
 
   private appendMessageToPage(msg: IMessage): void {
+    // ignore already existing messages
+    if (document.getElementById(btoa(msg.id))) {
+      return;
+    }
     const msgDiv = document.createElement('div');
+    msgDiv.id = btoa(msg.id);
     msgDiv.innerText = msg.message;
     msgDiv.style.position = 'absolute';
     msgDiv.style.left = msg.xPos + '%';
