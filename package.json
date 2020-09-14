@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/beebase-gmbh/serverless#readme",
   "dependencies": {
-    "aws-sdk": "^2.156.0"
+    "aws-sdk": "^2.751.0"
   }
 }
